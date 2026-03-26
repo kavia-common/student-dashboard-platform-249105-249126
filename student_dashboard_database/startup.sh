@@ -142,6 +142,15 @@ export POSTGRES_DB="${DB_NAME}"
 export POSTGRES_PORT="${DB_PORT}"
 EOF
 
+echo ""
+echo "Running migrations and seeding demo data..."
+# Apply schema + demo seed data (idempotent)
+chmod +x ./migrate_and_seed.sh 2>/dev/null || true
+./migrate_and_seed.sh || {
+  echo "✗ Migrations/seeds failed"
+  exit 1
+}
+
 echo "PostgreSQL setup complete!"
 echo "Database: ${DB_NAME}"
 echo "User: ${DB_USER}"
